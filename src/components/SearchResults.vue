@@ -1,9 +1,43 @@
 <template>
-  <div>
-    <h2>Search Results..</h2>
-    <input type="text" :value="query" @keyup.enter="submitQuery">
-    <div v-for="result in results" :key="result.id">
-      <pre>{{ result }}</pre>
+  <div class="container container-results">
+    <div class="results-logo">
+      <router-link :to="{ name: 'Homepage' }">
+        <img src="@/assets/ds_circle_logo.png" alt="">
+      </router-link>
+    </div>
+
+    <div class="search-bar results-search-bar">
+      <input type="text" placeholder="&#xf002; Search DailySmarty" :value="query" @keyup.enter="submitQuery">
+    </div>
+
+    <div class="results-posts-wrapper">
+      <div v-if="results.length > 0">
+        <div v-for="result in results" :key="result.id" class="post">
+          <div class="topic-wrapper">
+            <span v-for="topic in result.associated_topics" :key="topic" class="category-name">
+              {{ topic }}
+            </span>
+          </div>
+
+          <div class="result-post-title">
+            <a :href="result.url_for_post" target="_blank">
+              {{ result.title }}
+            </a>
+          </div>
+
+          <div v-if="result.post_links.length > 0" class="resource_links_wrapper">
+            <div>Resource links</div>
+            <div class="result-post-links-wrapper">
+              <a v-for="resultPostLink in result.post_links" :key="resultPostLink.link_url" :href="resultPostLink.link_url" class="result-post-link" target="_blank">{{resultPostLink.link_url}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="results.length == 0">
+        <h2>There are no results for your query</h2>
+      </div>
+
     </div>
   </div>
 </template>
@@ -16,7 +50,8 @@ export default {
   data() {
     return {
       query: null,
-      results: []
+      results: [],
+      showResourceLinks: false
     }
   },
   beforeMount() {
@@ -29,7 +64,7 @@ export default {
   },
   methods: {
     getResults(q) {
-      this.results = [];
+      this.results = null;
       axios.get('https://api.dailysmarty.com/search', {
         params: {
           q
@@ -37,6 +72,7 @@ export default {
       })
         .then(response => {
           console.log(response.data.posts);
+          this.results = [];
           this.results.push(...response.data.posts);
         })
         .catch(error => {
@@ -66,12 +102,17 @@ export default {
 
 .post {
   margin-top: 3em;
-  margin-bottom: 3em;
+  margin-bottom: 5em;
+}
+
+.topic-wrapper {
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
 .category-name {
   color: #2660f3;
-  margin-bottom: 1.5rem;
+  margin-right: 15px;
   font-size: 1.4rem;
 }
 
@@ -108,5 +149,9 @@ export default {
 
 .results-logo img {
   width: 50px;
+}
+
+.resource_links_wrapper {
+  margin-top: 10px;
 }
 </style>

@@ -15,28 +15,12 @@
       </div>
 
       <div class="recent-posts">
-        <div class="recent-post">
+        <div v-for="post in recentPosts.slice(0, 3)" :key="post.id" class="recent-post">
           <div class="recent-post-title">
-            Guide to rendering points on a Google Map
+            <a :href="post.url_for_post" target="_blank">{{ post.title }}</a>
           </div>
           <div class="recent-post-category">
-            JavaScript
-          </div>
-        </div>
-        <div class="recent-post">
-          <div class="recent-post-title">
-            Guide to rendering points on a Google Map
-          </div>
-          <div class="recent-post-category">
-            JavaScript
-          </div>
-        </div>
-        <div class="recent-post">
-          <div class="recent-post-title">
-            Guide to rendering points on a Google Map
-          </div>
-          <div class="recent-post-category">
-            JavaScript
+            {{ post.associated_topics[0] }}
           </div>
         </div>
       </div>
@@ -45,17 +29,35 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'Homepage',
   data() {
     return {
+      recentPosts: []
     }
+  },
+  beforeMount() {
+    this.getRecentPosts()
+    console.log(this.recentPosts);
   },
   methods: {
     submitQuery(evt) {
       console.log(evt.target.value);
       this.$router.push({ name: 'SearchResults', params: { query: evt.target.value } })
-    }
+    },
+    getRecentPosts() {
+      this.results = [];
+      axios.get('https://api.dailysmarty.com/posts')
+        .then(response => {
+          console.log(response.data.posts);
+          this.recentPosts.push(...response.data.posts);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
   }
 }
 </script>
@@ -95,12 +97,17 @@ export default {
   display: grid;
   width: 66vw;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  grid-gap: 2.5rem;
+  grid-gap: 4rem;
 }
 
 .recent-post-title {
+  margin-bottom: 15px;
+}
+
+.recent-post-title a {
   color: #535353;
   font-size: 1.4rem;
+  text-decoration: none;
 }
 
 .recent-post-category {
