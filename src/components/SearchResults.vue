@@ -11,7 +11,11 @@
     </div>
 
     <div class="results-posts-wrapper">
-      <div v-if="gettingResults">
+      <div v-if="!query">
+        <h2>You need to enter a query</h2>
+      </div>
+
+      <div v-if="gettingResults && query">
         <h2>Loading...</h2>
       </div>
 
