@@ -11,6 +11,10 @@
     </div>
 
     <div class="results-posts-wrapper">
+      <div v-if="gettingResults">
+        <h2>Loading...</h2>
+      </div>
+
       <div v-if="results.length > 0">
         <div v-for="result in results" :key="result.id" class="post">
           <div class="topic-wrapper">
@@ -34,7 +38,7 @@
         </div>
       </div>
 
-      <div v-if="results.length == 0">
+      <div v-if="!gettingResults && results.length == 0">
         <h2>There are no results for your query</h2>
       </div>
 
@@ -51,7 +55,8 @@ export default {
     return {
       query: null,
       results: [],
-      showResourceLinks: false
+      showResourceLinks: false,
+      gettingResults: true
     }
   },
   beforeMount() {
@@ -64,7 +69,9 @@ export default {
   },
   methods: {
     getResults(q) {
-      this.results = null;
+      this.gettingResults = true;
+      this.results = [];
+
       axios.get('https://api.dailysmarty.com/search', {
         params: {
           q
@@ -72,8 +79,10 @@ export default {
       })
         .then(response => {
           console.log(response.data.posts);
-          this.results = [];
+
           this.results.push(...response.data.posts);
+          this.gettingResults = false;
+
         })
         .catch(error => {
           console.log(error);

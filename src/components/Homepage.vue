@@ -14,6 +14,8 @@
         Recent Posts
       </div>
 
+      <i class="fas fa-search"></i>
+
       <div class="recent-posts">
         <div v-for="post in recentPosts.slice(0, 3)" :key="post.id" class="recent-post">
           <div class="recent-post-title">
