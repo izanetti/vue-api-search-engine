@@ -7,7 +7,7 @@
     </div>
 
     <div class="search-bar results-search-bar">
-      <input type="text" placeholder="&#xf002; Search DailySmarty" :value="query" @keyup.enter="submitQuery">
+      <input type="text" :placeholder="searchPlaceholder" :value="query" @keyup.enter="submitQuery">
     </div>
 
     <div class="results-posts-wrapper">
@@ -36,7 +36,7 @@
           <div v-if="result.post_links.length > 0" class="resource_links_wrapper">
             <div>Resource links</div>
             <div class="result-post-links-wrapper">
-              <a v-for="resultPostLink in result.post_links" :key="resultPostLink.link_url" :href="resultPostLink.link_url" class="result-post-link" target="_blank">{{resultPostLink.link_url}}</a>
+              <a v-for="resultPostLink in result.post_links.slice(0, 4)" :key="resultPostLink.link_url" :href="resultPostLink.link_url" class="result-post-link" target="_blank">{{resultPostLink.link_url}}</a>
             </div>
           </div>
         </div>
@@ -60,7 +60,8 @@ export default {
       query: null,
       results: [],
       showResourceLinks: false,
-      gettingResults: true
+      gettingResults: true,
+      searchPlaceholder: `\uf002 Search DailySmarty`
     }
   },
   beforeMount() {
@@ -101,6 +102,8 @@ export default {
 </script>
 
 <style scoped>
+@import 'https://use.fontawesome.com/releases/v5.0.13/css/all.css';
+
 .results-search-bar input {
   height: 5rem;
   margin-bottom: 1em;
@@ -138,7 +141,7 @@ export default {
 .result-post-links-wrapper {
   margin-top: 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fit, 1fr);
   grid-gap: 2rem;
 }
 

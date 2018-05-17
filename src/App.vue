@@ -11,6 +11,8 @@ export default {
 </script>
 
 <style>
+@import 'https://use.fontawesome.com/releases/v5.0.13/css/all.css';
+
 html {
   font-family: "Lato", sans-serif;
   box-sizing: border-box;

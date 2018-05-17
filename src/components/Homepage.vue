@@ -5,7 +5,7 @@
     </div>
 
     <div class="search-bar homepage-search-bar">
-      <input type="text" placeholder="&#xf002; Search DailySmarty" @keyup.enter="submitQuery">
+      <input type="text" :placeholder="searchPlaceholder" @keyup.enter="submitQuery">
       <p>Press return to search</p>
     </div>
 
@@ -13,8 +13,6 @@
       <div class="recent-posts-heading">
         Recent Posts
       </div>
-
-      <i class="fas fa-search"></i>
 
       <div class="recent-posts">
         <div v-for="post in recentPosts.slice(0, 3)" :key="post.id" class="recent-post">
@@ -32,13 +30,18 @@
 
 <script>
 import axios from 'axios';
+import FAExample from '@/components/icons/FAExample';
 
 export default {
   name: 'Homepage',
   data() {
     return {
-      recentPosts: []
+      recentPosts: [],
+      searchPlaceholder: `\uf002 Search DailySmarty`
     }
+  },
+  components: {
+    FAExample
   },
   beforeMount() {
     this.getRecentPosts()
@@ -65,6 +68,8 @@ export default {
 </script>
 
 <style scoped>
+@import 'https://use.fontawesome.com/releases/v5.0.13/css/all.css';
+
 .container-homepage {
   margin-top: 5em;
   align-items: center;
